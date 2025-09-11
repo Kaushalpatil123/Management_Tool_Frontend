@@ -3,7 +3,7 @@ import routes from "../../routes";
 
 const MainDashboard = () => {
   return (
-    <div className="bg-green-300 h-screen">
+    <div className="h-full">
       <Routes>
         {routes.map((route, index) => (
           <Route

@@ -14,7 +14,7 @@ function App() {
           <Sidebar />
         </div>
         {/* Main content (all routes go inside MainDashboard) */}
-        <div className="  w-[80%]">
+        <div className=" w-[80%]">
           <Routes>
             <Route path="/*" element={<MainDashboard />} />
           </Routes>
