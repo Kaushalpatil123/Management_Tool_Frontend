@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex pl-6 pt-10">
-      <div className=" overflow-y-auto w-64 bg-white">
+      <div className=" overflow-y-auto w-64 ">
         {/* Logo */}
         <div className="flex items-center space-x-2 px-6 py-4">
           <div className="w-8 h-8 bg-blue-600 rounded">

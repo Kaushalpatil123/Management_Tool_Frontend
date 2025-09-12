@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, RefreshCw, Inbox, ChevronRight, ChevronLeft } from "lucide-react";
 import AddLead from "./AddLead";
+import Header from "../../Components/Header/Header";
 const Leads = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -300,16 +301,23 @@ const Leads = () => {
     },
   ]);
 
+  const [searchTerm, setSearchTerm] = useState(""); // 🔍 search input state
 
   const [currentPage, setCurrentPage] = useState(1);
   const leadsPerPage = 10;
 
+  const filteredLeads = leads.filter((lead) =>
+    Object.values(lead).some((value) =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
   // Calculate indexes
   const indexOfLastLead = currentPage * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentLeads = leads.slice(indexOfFirstLead, indexOfLastLead);
+  const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
 
-  const totalPages = Math.ceil(leads.length / leadsPerPage);
+  const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
+
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -321,7 +329,9 @@ const Leads = () => {
   return (
     <>
       <div className="h-full w-full">
-        <div className="h-[15%] "></div>
+        <div className="h-[15%] w-full ">
+          <Header HeaderValue={"Add Lead"}/> 
+        </div>
         <div className="w-full h-full flex justify-center">
           <div
             className="bg-white rounded-xl p-6 w-[90%] max-h-[70vh] flex flex-col"
@@ -341,7 +351,12 @@ const Leads = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="search"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // reset to first page on search
+                  }}
                   className="border border-[#f0f0f0] rounded-lg pl-8 pr-3 py-2 text-sm w-60 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />

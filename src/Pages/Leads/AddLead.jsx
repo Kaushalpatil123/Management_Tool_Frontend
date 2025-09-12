@@ -94,8 +94,10 @@ const AddLead = ({ setIsOpen, isOpen }) => {
                         <div>
                             <label className="block text-sm font-medium">Source</label>
                             <select className="w-full border border-gray-300 rounded p-3">
-                                <option>Corporate</option>
-                                <option>Individual</option>
+                                <option>Direct</option>
+                                <option>Reference</option>
+                                <option>Website</option>
+
                             </select>
                         </div>
                         <div>
