@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import { X } from "lucide-react";
@@ -8,14 +8,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import config from "../../config/api";
-const AddLead = ({ setIsOpen, isOpen }) => {
-      const backendURL = config.backendUrl
+
+const EditLead = ({ setIsOpen, isOpen, selectedrow }) => {
+    const backendURL = config.backendUrl
     const [date, setDate] = useState(null);
     const [type, setType] = useState("Corporate");
     const [name, setName] = useState("");
-    const [branch, setBranch] = useState(""); // ✅ new field
-    const [phone, setPhone] = useState("");   // ✅ new field
+    const [branch, setBranch] = useState("");
+    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState("");
     const [source, setSource] = useState("Direct");
@@ -23,20 +25,36 @@ const AddLead = ({ setIsOpen, isOpen }) => {
 
     const options = countryList().getData();
 
+    useEffect(() => {
+        if (selectedrow) {
+            setDate(dayjs(selectedrow.date));
+            setType(selectedrow.type || "Corporate");
+            setName(selectedrow.name || "");
+            setBranch(selectedrow.branch || "");
+            setPhone(selectedrow.phone || "");
+            setEmail(selectedrow.email || "");
+            setStatus(selectedrow.status || "");
+            setSource(selectedrow.source || "Direct");
 
-  
-
+            // Set country object for react-select
+            if (selectedrow.country) {
+                const countryObj = options.find(
+                    (c) => c.label === selectedrow.country
+                );
+                setCountry(countryObj || null);
+            }
+        }
+    }, [selectedrow, options]);
 
     const changeCountry = (value) => {
         setCountry(value);
     };
 
-    // Handle Form Submit
-    const handleSubmit = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
 
-        const leadData = {
-            date: date ? date.toDate() : null,
+        const updatedLead = {
+            date: date ? date.format("YYYY-MM-DD") : null,
             type,
             name,
             branch,
@@ -47,37 +65,21 @@ const AddLead = ({ setIsOpen, isOpen }) => {
             country: country ? country.label : "",
         };
 
-
         try {
-            const res = await axios.post(`${backendURL}/api/leads`, leadData);
-            console.log(res.data);
-
-            // Close modal & reset form
+            await axios.put(`${backendURL}/api/leads/${selectedrow._id}`, updatedLead);
+            toast.success("Lead updated successfully! 🎉");
             setIsOpen(false);
-            setDate(null);
-            setType("Corporate");
-            setName("");
-            setBranch("");  // reset
-            setPhone("");   // reset
-            setEmail("");
-            setStatus("");
-            setSource("Direct");
-            setCountry(null);
         } catch (error) {
-            console.error(error);
-            toast.error("Fail to add lead!");
-
-        } finally {
-            toast.success("Lead added successfully! 🎉");
+            console.error(error.response?.data || error.message);
+            toast.error("Failed to update lead!");
         }
     };
 
+
     return (
         <>
-            {/* Overlay */}
             {isOpen && <div className="fixed inset-0 bg-black opacity-40 backdrop-blur-sm" />}
 
-            {/* Form Sidebar */}
             <div
                 className={`fixed top-0 right-0 h-full w-[25%] shadow-lg transform transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "translate-x-full"
                     }`}
@@ -90,11 +92,10 @@ const AddLead = ({ setIsOpen, isOpen }) => {
                         >
                             <X />
                         </button>
-                        <h2 className="text-xl font-semibold">Add New Lead</h2>
+                        <h2 className="text-xl font-semibold">Edit Lead</h2>
                     </div>
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+                    <form onSubmit={handleUpdate} className="p-6 flex flex-col gap-4">
                         {/* Date */}
                         <div>
                             <label className="block text-sm font-medium">Date</label>
@@ -133,7 +134,7 @@ const AddLead = ({ setIsOpen, isOpen }) => {
                             />
                         </div>
 
-                        {/* Branch ✅ */}
+                        {/* Branch */}
                         <div>
                             <label className="block text-sm font-medium">Branch</label>
                             <input
@@ -146,7 +147,7 @@ const AddLead = ({ setIsOpen, isOpen }) => {
                             />
                         </div>
 
-                        {/* Phone ✅ */}
+                        {/* Phone */}
                         <div>
                             <label className="block text-sm font-medium">Phone</label>
                             <input
@@ -216,7 +217,7 @@ const AddLead = ({ setIsOpen, isOpen }) => {
                             type="submit"
                             className="w-full py-2 bg-blue-600 text-white rounded"
                         >
-                            Save
+                            Update
                         </button>
                     </form>
                 </div>
@@ -225,4 +226,4 @@ const AddLead = ({ setIsOpen, isOpen }) => {
     );
 };
 
-export default AddLead;
+export default EditLead;
