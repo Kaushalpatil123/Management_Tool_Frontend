@@ -1,200 +1,35 @@
-import { useState } from "react";
-import { Search, RefreshCw, Inbox, ChevronRight, ChevronLeft, EllipsisVertical, ArrowLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, RefreshCw, Inbox, ChevronRight, ChevronLeft, EllipsisVertical, ArrowLeft,Pencil,Trash } from "lucide-react";
 import AddQuotes from "./AddQuotes";
 import Header from "../../Components/Header/Header";
+import axios from "axios";
+import { toast } from "react-toastify";
 
+import config from "../../config/api";
 const Quotes = () => {
+  const backendURL = config.backendUrl
 
+  const [Quote, setQuotes] = useState([]);
 
-  const [Quote] = useState([
-    {
-      Number: "2",
-      Client: "ccscc",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    },
-    {
-      Number: "2",
-      Client: "gdfg",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "gjkghkhjk",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "jfgjfgj",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "jfgjfg",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    }, {
-      Number: "2",
-      Client: "Corporate",
-      Date: "09/09/2025",
-      ExpiredDate: "09/10/2025",
-      SubTotal: "$ 753,056.00	",
-      country: "$ 753,056.00	",
-      Status: "Draft",
-    },
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedQuoteId, setselectedQuoteId] = useState(null);
+  // const [selectedrow, setselectedrow] = useState("");
+  // const [iseditOpen, setiseditOpen] = useState(false);
+  console.log("dADada", Quote)
 
-  ]);
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const res = await axios.get(`${backendURL}/api/quotes`); // replace with your backend URL
+        setQuotes(res.data);
+        console.log("Fetched Quotes:", res.data);
+      } catch (err) {
+        console.error("Error fetching quotes:", err);
+      }
+    };
+
+    fetchQuotes();
+  }, [backendURL]);
 
   const [searchTerm, setSearchTerm] = useState(""); // 🔍 search input state
   const [ShowQuote, setShowQuote] = useState("Table"); // 🔍 search input state
@@ -222,12 +57,36 @@ const Quotes = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
+
+   const handleDelete = async () => {
+    try {
+      //  await axios.delete(`http://localhost:5000/api/quotes/${selectedQuoteId}`);
+    await axios.delete(`${backendURL}/api/quotes/${selectedQuoteId}`);
+      // setLeads(leads.filter((lead) => lead._id !== selectedQuoteId));
+      toast.success("Quote deleted successfully!");
+    } catch (error) {
+      toast.error("Error deleting lead");
+      console.error("Delete error:", error);
+    } finally {
+      setIsDeleteOpen(false);
+      setselectedQuoteId(null);
+    }
+  };
   return (
 
     <>
       <div className="h-full w-full">
-         <div className="h-[15%] w-full ">
-          <Header HeaderValue={"Add Lead"}/> 
+        <div className="h-[15%] w-full ">
+          <Header HeaderValue={"Add Lead"} />
         </div>
         <div className="w-full h-full flex justify-center">
           {ShowQuote === "Table" && (
@@ -300,14 +159,34 @@ const Quotes = () => {
                     ) : (
                       currentLeads.map((lead, index) => (
                         <div key={index} className=" flex w-full">
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.Number}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.Client}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.Date}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.ExpiredDate}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.SubTotal}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.country}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.Status}</div>
-                          <div className="px-4 py-3 w-[12.5%] text-center flex justify-center align-middle items-center"><EllipsisVertical /></div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.number}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.client}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.date)}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.expireDate)}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.subTotal}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.total}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.status}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center flex justify-center align-middle items-center">
+                            <div
+                              // onClick={() => {
+                              //   setselectedrow(lead);
+                              //   setiseditOpen(true);
+                              // }}
+                              className="cursor-pointer hover:bg-gray-300 p-1 rounded-md">
+                              <Pencil />
+                            </div>
+
+                            {/* Delete Button */}
+                            <div
+                              onClick={() => {
+                                setselectedQuoteId(lead._id);
+                                setIsDeleteOpen(true);
+                              }}
+                              className="cursor-pointer hover:bg-gray-300 p-1 rounded-md text-red-600"
+                            >
+                              <Trash />
+                            </div>
+                          </div>
 
                         </div>
                       ))
@@ -366,6 +245,37 @@ const Quotes = () => {
 
             <AddQuotes setShowQuote={setShowQuote} />
 
+          )}
+
+          {isDeleteOpen && (
+            <>
+              {/* Overlay */}
+              <div className="fixed inset-0 bg-black opacity-40 backdrop-blur-sm z-40" />
+
+              {/* Centered Modal */}
+              <div className="fixed inset-0 flex justify-center items-center z-50">
+                <div className="bg-white p-6 rounded-xl shadow-lg w-[350px]">
+                  <h2 className="text-lg font-semibold mb-4">Delete Lead</h2>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to delete this lead?
+                  </p>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setIsDeleteOpen(false)}
+                      className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
 
