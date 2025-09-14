@@ -1,5 +1,4 @@
-import { useState, useEffect,useCallback } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import {
   Search,
   RefreshCw,
@@ -13,11 +12,14 @@ import AddLead from "./AddLead";
 import Header from "../../Components/Header/Header";
 import { toast } from "react-toastify";
 import EditLead from "./EditLead";
-import config from "../../config/api";
+import { deleteLead, fetchLeads } from "../../Store/slices/leadslice";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../Components/Loader";
 const Leads = () => {
-    const backendURL = config.backendUrl
   const [isOpen, setIsOpen] = useState(false);
-  const [leads, setLeads] = useState([]);
+    const [isloading, setisloading] = useState(false);
+
+  // const [leads, setLeads] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const leadsPerPage = 10;
@@ -27,30 +29,32 @@ const Leads = () => {
   const [selectedLeadId, setSelectedLeadId] = useState(null);
   const [selectedrow, setselectedrow] = useState("");
   const [iseditOpen, setiseditOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { items: leads } = useSelector((state) => state.leads);
 
-
-  
-
-
-  const fetchLeads = useCallback(async () => {
-    try {
-      const res = await axios.get(`${backendURL}/api/leads`);
-      setLeads(res.data);
-    } catch (error) {
-      console.error("Error fetching leads:", error);
-      toast.error("Failed to load leads");
-    }
-  }, [backendURL]);
+  console.log("dfsf", leads)
 
   useEffect(() => {
-    fetchLeads();
-  }, [fetchLeads]);
+    dispatch(fetchLeads());
+  }, [dispatch]);
+
+  // const fetchLeads = useCallback(async () => {
+  //   try {
+  //     const res = await axios.get(`${backendURL}/api/leads`);
+  //     setLeads(res.data);
+  //   } catch (error) {
+  //     console.error("Error fetching leads:", error);
+  //     toast.error("Failed to load leads");
+  //   }
+  // }, [backendURL]);
+
+
 
   // ✅ Delete Lead Function
   const handleDelete = async () => {
+    setisloading(true)
     try {
-    await axios.delete(`${backendURL}/api/leads/${selectedLeadId}`);
-      setLeads(leads.filter((lead) => lead._id !== selectedLeadId));
+      await dispatch(deleteLead(selectedLeadId)).unwrap(); // ✅ unwrap for error handling
       toast.success("Lead deleted successfully!");
     } catch (error) {
       toast.error("Error deleting lead");
@@ -58,6 +62,8 @@ const Leads = () => {
     } finally {
       setIsDeleteOpen(false);
       setSelectedLeadId(null);
+      dispatch(fetchLeads());
+      setisloading(false)
     }
   };
 
@@ -82,8 +88,17 @@ const Leads = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
+  const Refresh = () => {
+   dispatch(fetchLeads());
+  };
   return (
     <>
+
+    {isloading ? (
+      <> <Loader isloading={isloading}/></>
+    ):(
+      <></>
+    )}
       <div className="h-full w-full">
         {/* Page Header */}
         <div className="h-[15%] w-full ">
@@ -308,12 +323,19 @@ const Leads = () => {
           setIsOpen={setiseditOpen}   // Use edit modal setter
           isOpen={iseditOpen}          // Use edit modal state
           selectedrow={selectedrow}
+          Refresh={Refresh}
+          setisloading={setisloading}
         />
       )}
 
 
       {/* Add Lead Modal */}
-      {isOpen && <AddLead setIsOpen={setIsOpen} isOpen={isOpen} />}
+      {isOpen && <AddLead 
+      setIsOpen={setIsOpen} 
+      isOpen={isOpen} 
+      Refresh={Refresh}
+      setisloading={setisloading}
+      />}
     </>
   );
 };

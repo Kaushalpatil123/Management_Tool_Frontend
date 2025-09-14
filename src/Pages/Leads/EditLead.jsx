@@ -6,13 +6,13 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import config from "../../config/api";
+import { updateLead } from "../../Store/slices/leadslice";
+import { useDispatch } from "react-redux";
+const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => {
 
-const EditLead = ({ setIsOpen, isOpen, selectedrow }) => {
-    const backendURL = config.backendUrl
+    const dispatch = useDispatch();
     const [date, setDate] = useState(null);
     const [type, setType] = useState("Corporate");
     const [name, setName] = useState("");
@@ -64,16 +64,23 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow }) => {
             source,
             country: country ? country.label : "",
         };
-
+        setisloading(true)
         try {
-            await axios.put(`${backendURL}/api/leads/${selectedrow._id}`, updatedLead);
+            await dispatch(
+                updateLead({ id: selectedrow._id, updatedLead })
+            ).unwrap(); // unwrap to catch errors
             toast.success("Lead updated successfully! 🎉");
-            setIsOpen(false);
+            
         } catch (error) {
-            console.error(error.response?.data || error.message);
+            console.error(error);
             toast.error("Failed to update lead!");
+        } finally {
+            setIsOpen(false);
+            Refresh()
+            setisloading(false)
         }
     };
+
 
 
     return (

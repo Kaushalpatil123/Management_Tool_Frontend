@@ -6,11 +6,13 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import axios from "axios";
+
 import { toast } from "react-toastify";
-import config from "../../config/api";
-const AddLead = ({ setIsOpen, isOpen }) => {
-      const backendURL = config.backendUrl
+import { useDispatch } from "react-redux";
+import { createLead } from "../../Store/slices/leadslice";
+const AddLead = ({ setIsOpen, isOpen, Refresh, setisloading }) => {
+
+    const dispatch = useDispatch();
     const [date, setDate] = useState(null);
     const [type, setType] = useState("Corporate");
     const [name, setName] = useState("");
@@ -20,17 +22,10 @@ const AddLead = ({ setIsOpen, isOpen }) => {
     const [status, setStatus] = useState("");
     const [source, setSource] = useState("Direct");
     const [country, setCountry] = useState(null);
-
     const options = countryList().getData();
-
-
-  
-
-
     const changeCountry = (value) => {
         setCountry(value);
     };
-
     // Handle Form Submit
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,31 +41,31 @@ const AddLead = ({ setIsOpen, isOpen }) => {
             source,
             country: country ? country.label : "",
         };
-
-
+        setisloading(true)
         try {
-            const res = await axios.post(`${backendURL}/api/leads`, leadData);
-            console.log(res.data);
+            await dispatch(createLead(leadData)).unwrap();  // ✅ redux thunk
+            toast.success("Lead added successfully! 🎉");
 
             // Close modal & reset form
             setIsOpen(false);
             setDate(null);
             setType("Corporate");
             setName("");
-            setBranch("");  // reset
-            setPhone("");   // reset
+            setBranch("");
+            setPhone("");
             setEmail("");
             setStatus("");
             setSource("Direct");
             setCountry(null);
         } catch (error) {
-            console.error(error);
+            console.error("Create lead error:", error);
             toast.error("Fail to add lead!");
-
         } finally {
-            toast.success("Lead added successfully! 🎉");
+            Refresh();
+            setisloading(false)
         }
     };
+
 
     return (
         <>
