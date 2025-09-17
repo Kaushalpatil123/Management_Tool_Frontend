@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader";
 const Leads = () => {
   const [isOpen, setIsOpen] = useState(false);
-    const [isloading, setisloading] = useState(false);
+  const [isloading, setisloading] = useState(false);
 
   // const [leads, setLeads] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,15 +38,6 @@ const Leads = () => {
     dispatch(fetchLeads());
   }, [dispatch]);
 
-  // const fetchLeads = useCallback(async () => {
-  //   try {
-  //     const res = await axios.get(`${backendURL}/api/leads`);
-  //     setLeads(res.data);
-  //   } catch (error) {
-  //     console.error("Error fetching leads:", error);
-  //     toast.error("Failed to load leads");
-  //   }
-  // }, [backendURL]);
 
 
 
@@ -89,16 +80,16 @@ const Leads = () => {
   };
 
   const Refresh = () => {
-   dispatch(fetchLeads());
+    dispatch(fetchLeads());
   };
   return (
     <>
 
-    {isloading ? (
-      <> <Loader isloading={isloading}/></>
-    ):(
-      <></>
-    )}
+      {isloading ? (
+        <> <Loader isloading={isloading} /></>
+      ) : (
+        <></>
+      )}
       <div className="h-full w-full">
         {/* Page Header */}
         <div className="h-[15%] w-full ">
@@ -115,7 +106,6 @@ const Leads = () => {
           >
             {/* Header */}
             <div className="flex items-center gap-2 mb-4">
-              <button className="p-2 hover:bg-gray-100 rounded-full">←</button>
               <h2 className="text-lg font-semibold">Lead List</h2>
             </div>
 
@@ -136,19 +126,12 @@ const Leads = () => {
                 <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
               </div>
 
-              {/* Refresh Button */}
-              <button
-                onClick={fetchLeads}
-                className="flex items-center gap-1 border border-[#f0f0f0] rounded-lg px-3 py-2 text-sm hover:bg-gray-50 font-semibold"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Refresh
-              </button>
+
 
               {/* Add Lead Button */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="bg-[#0050c8] hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow"
+                className="bg-[#0050c8] hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow cursor-pointer"
               >
                 Add New Lead
               </button>
@@ -158,17 +141,18 @@ const Leads = () => {
             <div className="rounded-lg overflow-x-auto flex-1">
               <div className="w-full text-sm text-left">
                 {/* Table Head */}
-                <div className="bg-gray-50 text-gray-600 font-medium sticky w-full">
+                <div className="bg-gray-50 text-gray-600 font-medium sticky top-0 w-full">
                   <div className="flex w-full justify-around font-bold">
-                    <div className="px-4 py-3 w-[12.5%] text-center">Branch</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Type</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Name</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Status</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Source</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Country</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Phone</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Email</div>
-                    <div className="px-4 py-3 w-[12.5%] text-center">Actions</div>
+                    <div className="p-2 w-[5%] text-center">Sr.No</div>
+                    <div className="p-2 w-[12.5%] text-center">Branch</div>
+                    <div className="p-2 w-[12.5%] text-center">Type</div>
+                    <div className="p-2 w-[12.5%] text-center">Name</div>
+                    <div className="p-2 w-[12.5%] text-center">Status</div>
+                    <div className="p-2 w-[12.5%] text-center">Source</div>
+                    <div className="p-2 w-[12.5%] text-center">Country</div>
+                    <div className="p-2 w-[12.5%] text-center">Phone</div>
+                    <div className="p-2 w-[12.5%] text-center">Email</div>
+                    <div className="p-2 w-[12.5%] text-center">Actions</div>
                   </div>
                 </div>
 
@@ -184,33 +168,36 @@ const Leads = () => {
                   ) : (
                     currentLeads.map((lead, index) => (
                       <div key={index} className="flex w-full">
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                         <div className="p-2 w-[5%] text-center">
+                          {index+1}
+                        </div>
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.branch}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.type}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.name}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.status}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.source}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.country}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.phone}
                         </div>
-                        <div className="px-4 py-3 w-[12.5%] text-center">
+                        <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.email}
                         </div>
 
                         {/* Actions */}
-                        <div className="px-4 py-3 w-[12.5%] flex justify-center items-center gap-2">
+                        <div className="p-2 w-[12.5%] flex justify-center items-center gap-2">
                           {/* Edit Button */}
                           <div
                             onClick={() => {
@@ -330,11 +317,11 @@ const Leads = () => {
 
 
       {/* Add Lead Modal */}
-      {isOpen && <AddLead 
-      setIsOpen={setIsOpen} 
-      isOpen={isOpen} 
-      Refresh={Refresh}
-      setisloading={setisloading}
+      {isOpen && <AddLead
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+        Refresh={Refresh}
+        setisloading={setisloading}
       />}
     </>
   );

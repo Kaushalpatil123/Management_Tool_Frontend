@@ -64,13 +64,17 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
             source,
             country: country ? country.label : "",
         };
+        console.log("Sending to updateLead:", updatedLead);
+
         setisloading(true)
         try {
+
+
             await dispatch(
-                updateLead({ id: selectedrow._id, updatedLead })
-            ).unwrap(); // unwrap to catch errors
+                updateLead({ id: selectedrow._id, updatedData: updatedLead })
+            ).unwrap();
             toast.success("Lead updated successfully! 🎉");
-            
+
         } catch (error) {
             console.error(error);
             toast.error("Failed to update lead!");

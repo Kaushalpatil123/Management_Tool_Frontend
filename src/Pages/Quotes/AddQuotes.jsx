@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { Trash2, ArrowLeft, Plus, OctagonX } from "lucide-react";
-import axios from "axios";
 import { toast } from "react-toastify"; // optional if you're using toast
-import config from "../../config/api";
-const AddQuotes = ({ setShowQuote }) => {
-  const backendURL = config.backendUrl
+import { createQuote } from "../../Store/slices/QuoteSlice";
+import { useDispatch } from "react-redux";
+const AddQuotes = ({ setShowQuote, Refresh }) => {
+  const dispatch = useDispatch();
   const [items, setItems] = useState([{ item: "", description: "", qty: 1, price: 0 }]);
   const [form, setForm] = useState({
     client: "",
-    number: "",
     year: "",
     status: "Draft",
     date: "",
     expireDate: "",
     note: "",
   });
-
   // Handle text/select changes
   const handleFormChange = (field, value) => {
     setForm({ ...form, [field]: value });
@@ -52,16 +50,17 @@ const AddQuotes = ({ setShowQuote }) => {
         total: subTotal,
       };
 
-      const res = await axios.post(`${backendURL}/api/quotes`, payload);
+      await dispatch(createQuote(payload)).unwrap();
 
       toast.success("Quote created successfully!");
-      console.log("Saved:", res.data);
 
       // Go back to table after save
       setShowQuote("Table");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Error saving quote");
+      toast.error(error || "Error saving quote");
+    } finally {
+      Refresh()
     }
   };
 
@@ -91,13 +90,13 @@ const AddQuotes = ({ setShowQuote }) => {
           <div className="space-x-2 flex">
             <button
               onClick={() => setShowQuote("Table")}
-              className="py-2 px-4 border border-gray-300 rounded-xl text-sm font-semibold flex gap-2 items-center"
+              className="py-2 px-4 border cursor-pointer border-gray-300 rounded-xl text-sm font-semibold flex gap-2 items-center"
             >
               <OctagonX size={18} /> Cancel
             </button>
             <button
               onClick={handleSave}
-              className="py-2 px-4 text-sm bg-blue-600 text-white font-semibold flex gap-2 rounded-xl items-center"
+              className="py-2 px-4 cursor-pointer text-sm bg-blue-600 text-white font-semibold flex gap-2 rounded-xl items-center"
             >
               <Plus size={18} /> Save
             </button>
@@ -118,17 +117,7 @@ const AddQuotes = ({ setShowQuote }) => {
               placeholder="Enter client name"
             />
           </div>
-          <div>
-            <label className="block text-sm mb-1 font-semibold">
-              Number <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="text"
-              className="w-full border rounded px-2 py-1"
-              value={form.number}
-              onChange={(e) => handleFormChange("number", e.target.value)}
-            />
-          </div>
+          
           <div>
             <label className="block text-sm font-semibold mb-1">
               Year <span className="text-red-600">*</span>
@@ -231,7 +220,7 @@ const AddQuotes = ({ setShowQuote }) => {
               <button
                 type="button"
                 onClick={() => removeField(index)}
-                className="col-span-1 text-red-500 hover:text-red-700"
+                className="col-span-1 cursor-pointer text-red-500 hover:text-red-700"
               >
                 <Trash2 size={18} />
               </button>
@@ -241,7 +230,7 @@ const AddQuotes = ({ setShowQuote }) => {
           <button
             type="button"
             onClick={addField}
-            className="mt-2 text-blue-600 font-medium hover:underline"
+            className="mt-2 text-blue-600 font-medium cursor-pointer hover:underline"
           >
             + Add Field
           </button>

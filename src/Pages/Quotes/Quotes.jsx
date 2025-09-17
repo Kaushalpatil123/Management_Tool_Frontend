@@ -1,40 +1,35 @@
 import { useState, useEffect } from "react";
-import { Search, RefreshCw, Inbox, ChevronRight, ChevronLeft, EllipsisVertical, ArrowLeft,Pencil,Trash } from "lucide-react";
+import { Search, RefreshCw, Inbox, ChevronRight, ChevronLeft, EllipsisVertical, ArrowLeft, Pencil, Trash } from "lucide-react";
 import AddQuotes from "./AddQuotes";
 import Header from "../../Components/Header/Header";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteQuote, fetchQuotes } from "../../Store/slices/QuoteSlice";
+import EditQuote from "./EditQuote";
 
-import config from "../../config/api";
 const Quotes = () => {
-  const backendURL = config.backendUrl
-
+  const dispatch = useDispatch();
   const [Quote, setQuotes] = useState([]);
-
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedQuoteId, setselectedQuoteId] = useState(null);
-  // const [selectedrow, setselectedrow] = useState("");
-  // const [iseditOpen, setiseditOpen] = useState(false);
-  console.log("dADada", Quote)
-
-  useEffect(() => {
-    const fetchQuotes = async () => {
-      try {
-        const res = await axios.get(`${backendURL}/api/quotes`); // replace with your backend URL
-        setQuotes(res.data);
-        console.log("Fetched Quotes:", res.data);
-      } catch (err) {
-        console.error("Error fetching quotes:", err);
-      }
-    };
-
-    fetchQuotes();
-  }, [backendURL]);
-
   const [searchTerm, setSearchTerm] = useState(""); // 🔍 search input state
   const [ShowQuote, setShowQuote] = useState("Table"); // 🔍 search input state
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedQuote, setselectedQuote] = useState(""); // 🔍 search input state
+
+  const { quotes } = useSelector((state) => state.quotes);
+  useEffect(() => {
+    dispatch(fetchQuotes());
+  }, [dispatch]);
+  console.log("quotes", quotes)
+
+  useEffect(() => {
+    setQuotes(quotes);
+  }, [quotes]);
+
+  const Refresh = () => {
+    dispatch(fetchQuotes());
+  };
   const leadsPerPage = 10;
 
   const filteredLeads = Quote.filter((lead) =>
@@ -45,19 +40,14 @@ const Quotes = () => {
   // Calculate indexes
   const indexOfLastLead = currentPage * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
-
+  const currentQuote = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
   const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
-
-
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
     return d.toLocaleDateString("en-US", {
@@ -66,19 +56,18 @@ const Quotes = () => {
       year: "numeric",
     });
   };
-
-   const handleDelete = async () => {
+  const handleDelete = async () => {
     try {
-      //  await axios.delete(`http://localhost:5000/api/quotes/${selectedQuoteId}`);
-    await axios.delete(`${backendURL}/api/quotes/${selectedQuoteId}`);
-      // setLeads(leads.filter((lead) => lead._id !== selectedQuoteId));
+      await dispatch(deleteQuote(selectedQuoteId)).unwrap();
       toast.success("Quote deleted successfully!");
     } catch (error) {
-      toast.error("Error deleting lead");
+      toast.error(error || "Error deleting quote");
       console.error("Delete error:", error);
     } finally {
       setIsDeleteOpen(false);
       setselectedQuoteId(null);
+      dispatch(fetchQuotes());
+
     }
   };
   return (
@@ -86,7 +75,7 @@ const Quotes = () => {
     <>
       <div className="h-full w-full">
         <div className="h-[15%] w-full ">
-          <Header HeaderValue={"Add Lead"} />
+          <Header HeaderValue={"Add Quote"} />
         </div>
         <div className="w-full h-full flex justify-center">
           {ShowQuote === "Table" && (
@@ -99,7 +88,6 @@ const Quotes = () => {
             >
               {/* Header */}
               <div className="flex items-center gap-2 mb-4">
-                <button className="p-2 hover:bg-gray-100 rounded-full"><ArrowLeft /></button>
                 <h2 className="text-lg font-semibold">Quotes For Customers</h2>
               </div>
 
@@ -119,13 +107,9 @@ const Quotes = () => {
                   <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
                 </div>
 
-                <button className="flex items-center gap-1 border border-[#f0f0f0] rounded-lg px-3 py-2 text-sm hover:bg-gray-50 font-semibold">
-                  <RefreshCw className="w-4 h-4" />
-                  Refresh
-                </button>
 
                 <button
-                  onClick={() => setShowQuote("Editform")}
+                  onClick={() => setShowQuote("Addform")}
                   className="bg-[#0050c8] hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow">
                   Add New Quotes (for Customers)
                 </button>
@@ -134,9 +118,9 @@ const Quotes = () => {
               {/* Table */}
               <div className="rounded-lg overflow-x-auto flex-1">
                 <div className="w-full text-sm text-left">
-                  <div className="bg-gray-50 text-gray-600 font-medium sticky w-full">
+                  <div className="bg-gray-50 text-gray-600 font-medium  w-full sticky top-0">
                     <div className="flex w-full justify-around font-bold">
-                      <div className="px-4 py-3 w-[12.5%] text-center">Number</div>
+                      <div className="px-4 py-3 w-[12.5%] text-center">Sr.No</div>
                       <div className="px-4 py-3 w-[12.5%] text-center">Client</div>
                       <div className="px-4 py-3 w-[12.5%] text-center">Date</div>
                       <div className="px-4 py-3 w-[12.5%] text-center">Expired Date	</div>
@@ -147,7 +131,7 @@ const Quotes = () => {
                     </div>
                   </div>
                   <div>
-                    {currentLeads.length === 0 ? (
+                    {currentQuote.length === 0 ? (
                       <div>
                         <div colSpan="8" className="text-center py-10 text-gray-400">
                           <div className="flex flex-col items-center">
@@ -157,9 +141,9 @@ const Quotes = () => {
                         </div>
                       </div>
                     ) : (
-                      currentLeads.map((lead, index) => (
+                      currentQuote.map((lead, index) => (
                         <div key={index} className=" flex w-full">
-                          <div className="px-4 py-3 w-[12.5%] text-center">{lead.number}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{index+1}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{lead.client}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.date)}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.expireDate)}</div>
@@ -168,10 +152,10 @@ const Quotes = () => {
                           <div className="px-4 py-3 w-[12.5%] text-center">{lead.status}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center flex justify-center align-middle items-center">
                             <div
-                              // onClick={() => {
-                              //   setselectedrow(lead);
-                              //   setiseditOpen(true);
-                              // }}
+                              onClick={() => {
+                                setShowQuote("Editform")
+                                setselectedQuote(lead)
+                              }}
                               className="cursor-pointer hover:bg-gray-300 p-1 rounded-md">
                               <Pencil />
                             </div>
@@ -241,10 +225,11 @@ const Quotes = () => {
           )}
 
 
+          {ShowQuote === "Addform" && (
+            <AddQuotes setShowQuote={setShowQuote} Refresh={Refresh} />
+          )}
           {ShowQuote === "Editform" && (
-
-            <AddQuotes setShowQuote={setShowQuote} />
-
+            <EditQuote setShowQuote={setShowQuote} Refresh={Refresh} selectedQuote={selectedQuote} />
           )}
 
           {isDeleteOpen && (
