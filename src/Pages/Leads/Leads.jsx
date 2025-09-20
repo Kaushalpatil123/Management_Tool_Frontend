@@ -169,7 +169,7 @@ const Leads = () => {
                     currentLeads.map((lead, index) => (
                       <div key={index} className="flex w-full">
                          <div className="p-2 w-[5%] text-center">
-                          {index+1}
+                          {index+1+indexOfFirstLead}
                         </div>
                         <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.branch}

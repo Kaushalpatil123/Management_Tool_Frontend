@@ -1,4 +1,4 @@
-import { useState, } from "react";
+import { useState, useEffect } from "react";
 import { Plus, RefreshCcw, MoreHorizontal } from "lucide-react";
 import {
   Search,
@@ -12,7 +12,13 @@ import {
 import Header from "../../Components/Header/Header";
 import AddInvoice from "./AddInvoice";
 import EditInvoice from "./EditInvoice";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteInvoice, fetchInvoices } from "../../Store/slices/invoiceSlice";
+import { toast } from "react-toastify";
+
 const Invoice = () => {
+  const dispatch = useDispatch();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const InvoicePerPage = 10;
@@ -21,230 +27,12 @@ const Invoice = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedInvoiceId, setselectedInvoiceId] = useState(null);
   const [selectedInvoice, setselectedInvoice] = useState(""); // 🔍 search input state
+  const { invoices } = useSelector((state) => state.invoices);
 
-  const invoices = [
-    {
-      number: 1,
-      client: "fwef fewf",
-      date: "09/09/2025",
-      expiredDate: "09/10/2025",
-      total: "$ 1,165,725.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 2,
-      client: "John Doe",
-      date: "09/08/2025",
-      expiredDate: "09/15/2025",
-      total: "$ 12,500.00",
-      paid: "$ 5,000.00",
-      status: "Sent",
-      payment: "Partially Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 3,
-      client: "Acme Corp",
-      date: "09/05/2025",
-      expiredDate: "09/12/2025",
-      total: "$ 85,000.00",
-      paid: "$ 85,000.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 4,
-      client: "Jane Smith",
-      date: "09/02/2025",
-      expiredDate: "09/09/2025",
-      total: "$ 3,200.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "Admin",
-    },
-    {
-      number: 5,
-      client: "XYZ Pvt Ltd",
-      date: "09/01/2025",
-      expiredDate: "09/08/2025",
-      total: "$ 45,000.00",
-      paid: "$ 20,000.00",
-      status: "Sent",
-      payment: "Partially Paid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 6,
-      client: "Global Tech",
-      date: "08/30/2025",
-      expiredDate: "09/06/2025",
-      total: "$ 150,000.00",
-      paid: "$ 00.00",
-      status: "Draft",
-      payment: "Unpaid",
-      createdBy: "Admin",
-    },
-    {
-      number: 7,
-      client: "Smith Enterprises",
-      date: "08/28/2025",
-      expiredDate: "09/04/2025",
-      total: "$ 72,000.00",
-      paid: "$ 72,000.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 8,
-      client: "ABC Ltd",
-      date: "08/25/2025",
-      expiredDate: "09/01/2025",
-      total: "$ 60,000.00",
-      paid: "$ 00.00",
-      status: "Cancelled",
-      payment: "Unpaid",
-      createdBy: "Admin",
-    },
-    {
-      number: 9,
-      client: "Robert Johnson",
-      date: "08/22/2025",
-      expiredDate: "08/29/2025",
-      total: "$ 12,000.00",
-      paid: "$ 12,000.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 10,
-      client: "Star Industries",
-      date: "08/20/2025",
-      expiredDate: "08/27/2025",
-      total: "$ 98,500.00",
-      paid: "$ 50,000.00",
-      status: "Sent",
-      payment: "Partially Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 11,
-      client: "NextGen Co",
-      date: "08/18/2025",
-      expiredDate: "08/25/2025",
-      total: "$ 110,000.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 12,
-      client: "Michael Lee",
-      date: "08/15/2025",
-      expiredDate: "08/22/2025",
-      total: "$ 2,800.00",
-      paid: "$ 2,800.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 13,
-      client: "Blue Ocean Ltd",
-      date: "08/12/2025",
-      expiredDate: "08/19/2025",
-      total: "$ 66,700.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 14,
-      client: "Kevin Wright",
-      date: "08/10/2025",
-      expiredDate: "08/17/2025",
-      total: "$ 14,500.00",
-      paid: "$ 5,000.00",
-      status: "Sent",
-      payment: "Partially Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 15,
-      client: "Nova Systems",
-      date: "08/08/2025",
-      expiredDate: "08/15/2025",
-      total: "$ 250,000.00",
-      paid: "$ 00.00",
-      status: "Draft",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 16,
-      client: "GreenField Ltd",
-      date: "08/05/2025",
-      expiredDate: "08/12/2025",
-      total: "$ 90,000.00",
-      paid: "$ 90,000.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 17,
-      client: "Delta Inc",
-      date: "08/02/2025",
-      expiredDate: "08/09/2025",
-      total: "$ 120,000.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 18,
-      client: "Laura Adams",
-      date: "07/30/2025",
-      expiredDate: "08/06/2025",
-      total: "$ 5,600.00",
-      paid: "$ 5,600.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "Admin",
-    },
-    {
-      number: 19,
-      client: "Bright Future Co",
-      date: "07/28/2025",
-      expiredDate: "08/04/2025",
-      total: "$ 76,400.00",
-      paid: "$ 00.00",
-      status: "Sent",
-      payment: "Unpaid",
-      createdBy: "kaushal",
-    },
-    {
-      number: 20,
-      client: "William Brown",
-      date: "07/25/2025",
-      expiredDate: "08/01/2025",
-      total: "$ 9,900.00",
-      paid: "$ 9,900.00",
-      status: "Paid",
-      payment: "Paid",
-      createdBy: "Admin",
-    },
-  ];
 
+  useEffect(() => {
+    dispatch(fetchInvoices());
+  }, [dispatch]);
 
 
   const filteredInvoice = invoices.filter((lead) =>
@@ -254,9 +42,9 @@ const Invoice = () => {
   );
 
   // ✅ Pagination
-  const indexOfLastLead = currentPage * InvoicePerPage;
-  const indexOfFirstLead = indexOfLastLead - InvoicePerPage;
-  const currentInvoice = filteredInvoice.slice(indexOfFirstLead, indexOfLastLead);
+  const indexOfLastInvoice = currentPage * InvoicePerPage;
+  const indexOfFirstInvoice = indexOfLastInvoice - InvoicePerPage;
+  const currentInvoice = filteredInvoice.slice(indexOfFirstInvoice, indexOfLastInvoice);
   const totalPages = Math.ceil(filteredInvoice.length / InvoicePerPage);
 
   const handlePrevPage = () => {
@@ -268,6 +56,25 @@ const Invoice = () => {
   };
 
   const Refresh = () => {
+  };
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const handleDelete = async () => {
+    if (selectedInvoiceId) {
+      await dispatch(deleteInvoice(selectedInvoiceId));
+      toast.success("Invoice deleted successfully! 🎉");
+
+      setIsDeleteOpen(false);
+      setselectedInvoiceId(null);
+    }
   };
   return (
     <>
@@ -317,16 +124,14 @@ const Invoice = () => {
                 <div className="w-full text-sm">
                   <div className="sticky top-0">
                     <div className="bg-gray-50 flex w-full text-gray-600 text-left font-semibold ">
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Number</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Client</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Date</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Expired Date</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Total</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Paid</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Status</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Payment</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Created By</div>
-                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[10%]">Actions</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Sr.No</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Client</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Date</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Expired Date</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Total</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Paid</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Status</div>
+                      <div className="px-4 py-3 flex justify-center align-middle items-center w-[12.5%]">Actions</div>
                     </div>
                   </div>
                   <div>
@@ -335,24 +140,19 @@ const Invoice = () => {
                         key={i}
                         className=" flex hover:bg-gray-50 transition"
                       >
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.number}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.client}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap font-semibold">{inv.date}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.expiredDate}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.total}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.paid}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">{i + 1 + indexOfFirstInvoice}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">{inv.client}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap font-semibold">{formatDate(inv.date)}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">{formatDate(inv.expireDate)}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">{inv.total}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">{inv.paid}</div>
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap">
                           <span className="bg-yellow-100 text-yellow-700 text-xs font-medium px-2 py-1 rounded">
                             {inv.status}
                           </span>
                         </div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">
-                          <span className="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded">
-                            {inv.payment}
-                          </span>
-                        </div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap">{inv.createdBy}</div>
-                        <div className="px-4 py-3 w-[10%] flex justify-center align-middle items-center break-all text-wrap text-right">
+
+                        <div className="px-4 py-3 w-[12.5%] flex justify-center align-middle items-center break-all text-wrap text-right">
                           <div
                             onClick={() => {
                               setShowInvoice("Editform")
@@ -432,7 +232,6 @@ const Invoice = () => {
           <EditInvoice
             setShowInvoice={setShowInvoice}
             Refresh={Refresh}
-            selectedInvoiceId={selectedInvoiceId}
             selectedInvoice={selectedInvoice}
           />
         )}
@@ -458,7 +257,7 @@ const Invoice = () => {
                   Cancel
                 </button>
                 <button
-                  // onClick={handleDelete}
+                  onClick={handleDelete}
                   className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
                 >
                   Delete

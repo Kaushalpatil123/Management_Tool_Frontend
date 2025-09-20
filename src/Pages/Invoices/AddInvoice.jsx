@@ -1,35 +1,77 @@
 import React, { useState } from "react";
 import { Trash2, ArrowLeft, Plus, OctagonX } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { createInvoice } from "../../Store/slices/invoiceSlice";
+import { toast } from "react-toastify";
+
 const AddInvoice = ({ setShowInvoice, Refresh }) => {
+  const dispatch = useDispatch();
+
+  // 🔹 Form states
+  const [client, setClient] = useState("");
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [status, setStatus] = useState("Draft");
+  const [paid, setPaid] = useState(0);
+  const [date, setDate] = useState("");
+  const [expireDate, setExpireDate] = useState("");
+  const [note, setNote] = useState("");
+
   const [items, setItems] = useState([
     { item: "", description: "", qty: 1, price: 0 },
   ]);
 
-  // Add new item row
+  // ➕ Add new item row
   const addItem = () => {
     setItems([...items, { item: "", description: "", qty: 1, price: 0 }]);
   };
 
-  // Remove item row
+  // ❌ Remove item row
   const removeItem = (index) => {
     setItems(items.filter((_, i) => i !== index));
   };
 
-  // Handle input change
+  // ✏️ Handle input change
   const handleChange = (index, field, value) => {
     const newItems = [...items];
     newItems[index][field] = value;
     setItems(newItems);
   };
 
-  // Calculate totals
-  const subTotal = items.reduce(
-    (acc, curr) => acc + curr.qty * curr.price,
-    0
-  );
+  // 🔢 Totals
+  const subTotal = items.reduce((acc, curr) => acc + curr.qty * curr.price, 0);
+  const tax = 0; // you can add tax logic later
+  const total = subTotal + tax;
+
+  // 💾 Save invoice
+  const handleSave = async () => {
+    const invoiceData = {
+      client,
+      status,
+      year: Number(year),
+      paid: Number(paid),
+      date,
+      expireDate,
+      note,
+      items,
+      subTotal,
+      tax,
+      total,
+    };
+
+    try {
+      await dispatch(createInvoice(invoiceData)).unwrap();
+      toast.success("Invoice added successfully! 🎉");
+      Refresh();
+      setShowInvoice("Table");
+    } catch (errMessage) {
+      // errMessage will be plain text from rejectWithValue
+      console.error("Failed to create invoice:", errMessage);
+      toast.error(errMessage);
+    }
+  };
+
 
   return (
-
     <div
       className="bg-white rounded-xl p-6 w-[90%] min-h-[70vh] flex flex-col"
       style={{
@@ -40,8 +82,6 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-
-
           <div className="flex gap-2 items-center">
             <button
               onClick={() => setShowInvoice("Table")}
@@ -51,10 +91,10 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
             </button>
             <h2 className="text-xl font-bold">New</h2>
             <span className="ml-2 text-sm bg-gray-200 px-2 py-1 rounded-md border border-gray-300">
-              Draft
+              {status}
             </span>
           </div>
-        
+
           <div className="space-x-2 flex">
             <button
               onClick={() => setShowInvoice("Table")}
@@ -63,7 +103,7 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
               <OctagonX size={18} /> Cancel
             </button>
             <button
-              // onClick={handleSave}
+              onClick={handleSave}
               className="py-2 px-4 cursor-pointer text-sm bg-blue-600 text-white font-semibold flex gap-2 rounded-xl items-center"
             >
               <Plus size={18} /> Save
@@ -76,91 +116,92 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
           {/* Row 1 */}
           <div className="grid grid-cols-5 gap-4">
             <div>
-              <label className="block text-sm font-semibold ">
-                Client *
+              <label className="block text-sm font-semibold">
+                Client <span className="text-red-600">*</span>
               </label>
               <input
                 type="text"
-                placeholder="search"
+                value={client}
+                onChange={(e) => setClient(e.target.value)}
                 className="w-full border rounded-md px-3 py-2 text-sm"
+                placeholder="search"
               />
             </div>
+
             <div>
               <label className="block text-sm font-semibold">
-                Number *
+                Year <span className="text-red-600">*</span>
               </label>
               <input
-                type="text"
-                value="2"
+                type="number"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
                 className="w-full border rounded-md px-3 py-2 text-sm"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-semibold ">
-                Year *
-              </label>
-              <input
-                type="text"
-                value="2025"
+              <label className="block text-sm font-semibold">Status</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
                 className="w-full border rounded-md px-3 py-2 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold ">
-                Currency *
-              </label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm">
-                <option>$ (US Dollar)</option>
-                <option>€ (Euro)</option>
-                <option>₹ (INR)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold ">
-                Status
-              </label>
-              <select className="w-full border rounded-md px-3 py-2 text-sm">
+              >
                 <option>Draft</option>
                 <option>Sent</option>
                 <option>Paid</option>
                 <option>Cancelled</option>
               </select>
             </div>
+            <div>
+              <label className="block text-sm font-semibold">Paid</label>
+              <input
+                type="number"
+                value={paid}
+                onChange={(e) => setPaid(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold">
+                Date <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 text-sm"
+              />
+            </div>
           </div>
 
           {/* Row 2 */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-5 gap-4">
+
             <div>
-              <label className="block text-sm font-semibold ">
-                Date *
+              <label className="block text-sm font-semibold">
+                Expire Date <span className="text-red-600">*</span>
               </label>
               <input
                 type="date"
-                defaultValue="2025-09-19"
+                value={expireDate}
+                onChange={(e) => setExpireDate(e.target.value)}
                 className="w-full border rounded-md px-3 py-2 text-sm"
               />
             </div>
-            <div>
-              <label className="block text-sm font-semibold ">
-                Expire Date *
-              </label>
-              <input
-                type="date"
-                defaultValue="2025-10-19"
-                className="w-full border rounded-md px-3 py-2 text-sm"
-              />
-            </div>
+
             <div className="col-span-2">
-              <label className="block text-sm font-semibold ">
-                Note
-              </label>
+              <label className="block text-sm font-semibold">Note</label>
               <input
                 type="text"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
                 className="w-full border rounded-md px-3 py-2 text-sm"
                 placeholder="Enter note"
               />
             </div>
           </div>
+
           <hr />
           {/* Items Table */}
           <div>
@@ -179,9 +220,7 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
                   placeholder="Item Name"
                   className="border rounded-md px-2 py-1 text-sm"
                   value={item.item}
-                  onChange={(e) =>
-                    handleChange(index, "item", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "item", e.target.value)}
                 />
                 <input
                   type="text"
@@ -247,6 +286,7 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
               <span className="text-sm font-semibold">Tax :</span>
               <input
                 type="text"
+                value={`$ ${tax.toFixed(2)}`}
                 readOnly
                 className="border rounded-md px-3 py-1 text-sm w-32 text-right"
               />
@@ -256,20 +296,16 @@ const AddInvoice = ({ setShowInvoice, Refresh }) => {
               <span className="text-sm font-semibold">Total :</span>
               <input
                 type="text"
-                value={`$ ${subTotal.toFixed(2)}`}
+                value={`$ ${total.toFixed(2)}`}
                 readOnly
                 className="border rounded-md px-3 py-1 text-sm w-32 text-right"
               />
             </div>
           </div>
-
-
         </div>
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default AddInvoice
+export default AddInvoice;

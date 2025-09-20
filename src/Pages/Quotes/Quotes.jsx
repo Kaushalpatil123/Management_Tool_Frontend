@@ -38,9 +38,9 @@ const Quotes = () => {
     )
   );
   // Calculate indexes
-  const indexOfLastLead = currentPage * leadsPerPage;
-  const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentQuote = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
+  const indexOfLastQuote = currentPage * leadsPerPage;
+  const indexOfFirstQuote = indexOfLastQuote - leadsPerPage;
+  const currentQuote = filteredLeads.slice(indexOfFirstQuote, indexOfLastQuote);
   const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -143,7 +143,7 @@ const Quotes = () => {
                     ) : (
                       currentQuote.map((lead, index) => (
                         <div key={index} className=" flex w-full">
-                          <div className="px-4 py-3 w-[12.5%] text-center">{index+1}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{index+1+indexOfFirstQuote}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{lead.client}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.date)}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.expireDate)}</div>
