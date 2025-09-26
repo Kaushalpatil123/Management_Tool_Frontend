@@ -1,21 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-const EditOrder = ({ setShowOrder, selectedOrder }) => {
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { updateOrder } from "../../Store/slices/orderSlice";
 
-    console.log("fsfsd", selectedOrder)
-    // States for form fields
+const EditOrder = ({ setShowOrder, selectedOrder }) => {
+    const dispatch = useDispatch();
+
+    // Prefill state from selectedOrder
     const [productName, setProductName] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(0);
     const [discount, setDiscount] = useState(0);
-    const [status, setStatus] = useState("Pending");
+    const [status, setStatus] = useState("Draft");
     const [phone, setPhone] = useState("");
     const [state, setState] = useState("");
     const [city, setCity] = useState("");
     const [notes, setNotes] = useState("");
 
+    // Prefill form fields whenever selectedOrder changes
+    useEffect(() => {
+        if (selectedOrder) {
+            setProductName(selectedOrder.productName || "");
+            setQuantity(selectedOrder.quantity || 1);
+            setPrice(selectedOrder.price || 0);
+            setDiscount(selectedOrder.discount || 0);
+            setStatus(selectedOrder.status || "Draft");
+            setPhone(selectedOrder.phone || "");
+            setState(selectedOrder.state || "");
+            setCity(selectedOrder.city || "");
+            setNotes(selectedOrder.notes || "");
+        }
+    }, [selectedOrder]);
+
     // Calculate total dynamically
     const total = quantity * price - discount;
+
+    // Handle Save (Update API)
+    const handleSave = () => {
+        const updatedData = {
+            productName,
+            quantity,
+            price,
+            discount,
+            status,
+            phone,
+            state,
+            city,
+            notes,
+            total,
+        };
+
+        dispatch(updateOrder({ id: selectedOrder._id, orderData: updatedData }))
+            .unwrap()
+            .then(() => {
+                toast.success("Quote updated successfully!");
+                setShowOrder("Table");
+            })
+            .catch((err) => {
+                console.error("Update failed:", err);
+                alert("Failed to update order!");
+            });
+    };
+
     return (
         <div
             className="bg-white rounded-xl p-6 w-[90%] min-h-[70vh] flex flex-col"
@@ -28,7 +75,6 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-2">
-
                         <button
                             onClick={() => setShowOrder("Table")}
                             className="p-2 cursor-pointer hover:bg-gray-100 rounded-full"
@@ -36,7 +82,9 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                             <ArrowLeft />
                         </button>
                         <h2 className="text-xl font-semibold">Edit</h2>
-                        <span className="px-2 py-1 text-sm bg-gray-200 rounded">{status}</span>
+                        <span className="px-2 py-1 text-sm bg-gray-200 rounded">
+                            {status}
+                        </span>
                     </div>
 
                     <div className="flex gap-3">
@@ -47,6 +95,7 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                             Cancel
                         </button>
                         <button
+                            onClick={handleSave}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
                             Save
@@ -110,7 +159,6 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                     </div>
                     <div>
                         <label className="text-sm font-medium">Status</label>
-
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
@@ -168,7 +216,7 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default EditOrder
+export default EditOrder;

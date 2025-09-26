@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { createOrder } from "../../Store/slices/orderSlice";
+import { toast } from "react-toastify"; // optional if you're using toast
 
 const AddOrder = ({ setShowOrder }) => {
+  const dispatch = useDispatch();
+
   // States for form fields
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -15,6 +20,33 @@ const AddOrder = ({ setShowOrder }) => {
 
   // Calculate total dynamically
   const total = quantity * price - discount;
+
+
+  // Handle save
+  const handleSave = () => {
+    const orderData = {
+      productName,
+      quantity,
+      price,
+      discount,
+      total,
+      status,
+      phone,
+      state,
+      city,
+      notes,
+    };
+
+    dispatch(createOrder(orderData))
+      .unwrap()
+      .then(() => {
+        toast.success(" Order created successfully");
+        setShowOrder("Table");
+      })
+      .catch((err) => {
+        alert("❌ Failed to create order: " + err);
+      });
+  };
 
   return (
     <div
@@ -47,6 +79,7 @@ const AddOrder = ({ setShowOrder }) => {
               Cancel
             </button>
             <button
+              onClick={handleSave}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Save

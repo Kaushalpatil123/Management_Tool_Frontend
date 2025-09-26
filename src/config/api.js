@@ -1,5 +1,5 @@
 const config = {
-    backendUrl: "http://localhost:5000",
+    backendUrl: "https://management-tool-backend-1.onrender.com",
 };
 export default config;
 

@@ -242,7 +242,7 @@ const Quotes = () => {
                 <div className="bg-white p-6 rounded-xl shadow-lg w-[350px]">
                   <h2 className="text-lg font-semibold mb-4">Delete Lead</h2>
                   <p className="text-gray-600 mb-6">
-                    Are you sure you want to delete this Quote?
+                    Are you sure you want to delete this Order?
                   </p>
                   <div className="flex justify-end gap-3">
                     <button
