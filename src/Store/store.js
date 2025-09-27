@@ -3,6 +3,7 @@ import leadsReducer from './slices/leadslice';
 import quoteReducer from "./slices/QuoteSlice";
 import invoiceReducer from "./slices/invoiceSlice";
 import orderReducer from "./slices/orderSlice";
+import productReducer from "./slices/productSlice";
 
 
 export const store = configureStore({
@@ -11,6 +12,8 @@ export const store = configureStore({
     quotes: quoteReducer,
     invoices: invoiceReducer,
     orders: orderReducer,
+    products: productReducer,
+
 
   },
 });

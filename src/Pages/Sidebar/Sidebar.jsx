@@ -16,7 +16,7 @@ const Sidebar = () => {
     { name: "Invoices", icon: <FileText size={18} />, path: "/invoices" },
     { name: "Quotes", icon: <Quote size={18} />, path: "/quotes" },
     { name: "Leads", icon: <Filter size={18} />, path: "/leads" },
-    { name: "Products", icon: <Tag size={18} />, path: "/products" },
+    { name: "Products", icon: <Tag size={18} />, path: "/product" },
     { name: "Order", icon: <ShoppingCart size={18} />, path: "/orders" },
   ];
 
