@@ -123,7 +123,7 @@ const EditInvoice = ({ setShowInvoice, Refresh, selectedInvoice }) => {
           {/* Row 1 */}
           <div className="grid grid-cols-5 gap-4">
             <div>
-              <label className="block text-sm font-semibold">Client *</label>
+              <label className="block text-sm font-semibold">Client <span className="text-red-600">*</span></label>
               <input
                 type="text"
                 value={client}
@@ -133,7 +133,7 @@ const EditInvoice = ({ setShowInvoice, Refresh, selectedInvoice }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold">Year *</label>
+              <label className="block text-sm font-semibold">Year <span className="text-red-600">*</span></label>
               <input
                 type="text"
                 value={year}
@@ -142,7 +142,7 @@ const EditInvoice = ({ setShowInvoice, Refresh, selectedInvoice }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold">Currency *</label>
+              <label className="block text-sm font-semibold">Currency <span className="text-red-600">*</span></label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
@@ -167,7 +167,7 @@ const EditInvoice = ({ setShowInvoice, Refresh, selectedInvoice }) => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold">Date *</label>
+              <label className="block text-sm font-semibold">Date <span className="text-red-600">*</span></label>
               <input
                 type="date"
                 value={date}
@@ -181,7 +181,7 @@ const EditInvoice = ({ setShowInvoice, Refresh, selectedInvoice }) => {
           <div className="grid grid-cols-4 gap-4">
 
             <div>
-              <label className="block text-sm font-semibold">Expire Date *</label>
+              <label className="block text-sm font-semibold">Expire Date <span className="text-red-600">*</span></label>
               <input
                 type="date"
                 value={expireDate}

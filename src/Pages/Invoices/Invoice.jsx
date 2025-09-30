@@ -81,7 +81,7 @@ const Invoice = () => {
       <div className="h-full w-full">
 
         <div className="h-[15%] w-full ">
-          <Header HeaderValue={"Add Invoice"} />
+          <Header />
         </div>
         {ShowInvoice === "Table" && (
           <div className="w-full h-full flex justify-center">

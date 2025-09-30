@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../Store/slices/orderSlice";
 import { toast } from "react-toastify"; // optional if you're using toast
+import { fetchProducts } from "../../Store/slices/productSlice";
 
 const AddOrder = ({ setShowOrder }) => {
   const dispatch = useDispatch();
@@ -17,13 +18,40 @@ const AddOrder = ({ setShowOrder }) => {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [notes, setNotes] = useState("");
+  const { items: products } = useSelector(
+    (state) => state.products
+  );
+
+
+  console.log("scscs", products)
 
   // Calculate total dynamically
   const total = quantity * price - discount;
 
-
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
   // Handle save
   const handleSave = () => {
+    // Validation
+    if (!productName) {
+      toast.error("⚠️ Please select a product name");
+      return;
+    }
+    if (!quantity || quantity <= 0) {
+      toast.error("⚠️ Quantity must be greater than 0");
+      return;
+    }
+    if (!price || price <= 0) {
+      toast.error("⚠️ Price must be greater than 0");
+      return;
+    }
+    if (!phone || phone.length !== 10) {
+      toast.error("⚠️ Phone number must be 10 digits");
+      return;
+    }
+
+    // If validation passes
     const orderData = {
       productName,
       quantity,
@@ -44,9 +72,11 @@ const AddOrder = ({ setShowOrder }) => {
         setShowOrder("Table");
       })
       .catch((err) => {
-        alert("❌ Failed to create order: " + err);
+        console.log("❌ Error:", err);
+        toast.error("Failed to create order. Please try again.");
       });
   };
+
 
   return (
     <div
@@ -90,33 +120,46 @@ const AddOrder = ({ setShowOrder }) => {
         {/* Form */}
         <div className="grid grid-cols-4 gap-4 mb-4">
           <div>
-            <label className="text-sm font-medium">Product Name *</label>
-            <input
-              type="text"
+            <label className="text-sm font-medium">Product Name <span className="text-red-600">*</span></label>
+            <select
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-              placeholder="Enter Product Name"
               className="w-full border rounded px-3 py-2 mt-1"
-            />
+              required
+            >
+              <option value="">-- Select Product --</option>
+              {products && products.length > 0 ? (
+                products.map((prod) => (
+                  <option key={prod._id} value={prod.productName}>
+                    {prod.productName}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No products available</option>
+              )}
+            </select>
           </div>
+
           <div>
-            <label className="text-sm font-medium">Quantity *</label>
+            <label className="text-sm font-medium">Quantity <span className="text-red-600">*</span></label>
             <input
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               placeholder="Enter Quantity"
               className="w-full border rounded px-3 py-2 mt-1"
+              required
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Price</label>
+            <label className="text-sm font-medium">Price <span className="text-red-600">*</span></label>
             <input
               type="number"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
               placeholder="Enter Price"
               className="w-full border rounded px-3 py-2 mt-1"
+              required
             />
           </div>
           <div>
@@ -142,12 +185,13 @@ const AddOrder = ({ setShowOrder }) => {
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Status</label>
+            <label className="text-sm font-medium">Status <span className="text-red-600">*</span></label>
 
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               className="w-full border rounded px-3 py-2 mt-1"
+              required
             >
               <option>Draft</option>
               <option>Sent</option>
@@ -156,13 +200,16 @@ const AddOrder = ({ setShowOrder }) => {
             </select>
           </div>
           <div>
-            <label className="text-sm font-medium">Phone</label>
+            <label className="text-sm font-medium">Phone <span className="text-red-600">*</span></label>
             <input
-              type="number"
+              type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              maxLength={10}
+              pattern="[0-9]{10}"
               placeholder="Enter Phone"
               className="w-full border rounded px-3 py-2 mt-1"
+              required
             />
           </div>
           <div>

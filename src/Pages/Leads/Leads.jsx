@@ -93,7 +93,7 @@ const Leads = () => {
       <div className="h-full w-full">
         {/* Page Header */}
         <div className="h-[15%] w-full ">
-          <Header HeaderValue={"Add Lead"} />
+          <Header/>
         </div>
 
         <div className="w-full h-full flex justify-center">

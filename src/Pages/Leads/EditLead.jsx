@@ -109,12 +109,13 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
                     <form onSubmit={handleUpdate} className="p-6 flex flex-col gap-4">
                         {/* Date */}
                         <div>
-                            <label className="block text-sm font-medium">Date</label>
+                            <label className="block text-sm font-medium">Date <span className="text-red-600">*</span></label>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     value={date}
                                     onChange={(newValue) => setDate(newValue)}
                                     renderInput={(params) => <TextField {...params} fullWidth />}
+                                    className="w-full"
                                 />
                             </LocalizationProvider>
                         </div>
@@ -134,7 +135,7 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
 
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium">Name</label>
+                            <label className="block text-sm font-medium">Name <span className="text-red-600">*</span></label>
                             <input
                                 type="text"
                                 value={name}
@@ -147,7 +148,7 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
 
                         {/* Branch */}
                         <div>
-                            <label className="block text-sm font-medium">Branch</label>
+                            <label className="block text-sm font-medium">Branch <span className="text-red-600">*</span></label>
                             <input
                                 type="text"
                                 value={branch}
@@ -160,11 +161,13 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
 
                         {/* Phone */}
                         <div>
-                            <label className="block text-sm font-medium">Phone</label>
+                            <label className="block text-sm font-medium">Phone <span className="text-red-600">*</span></label>
                             <input
-                                type="number"
+                                type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
+                                maxLength={10}
+                                pattern="[0-9]{10}"
                                 className="w-full border border-gray-300 rounded p-3"
                                 placeholder="Enter phone number"
                                 required
@@ -173,7 +176,7 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium">Email</label>
+                            <label className="block text-sm font-medium">Email <span className="text-red-600">*</span></label>
                             <input
                                 type="email"
                                 value={email}
@@ -186,7 +189,7 @@ const EditLead = ({ setIsOpen, isOpen, selectedrow, Refresh, setisloading }) => 
 
                         {/* Status */}
                         <div>
-                            <label className="block text-sm font-medium">Status</label>
+                            <label className="block text-sm font-medium">Status <span className="text-red-600">*</span></label>
                             <input
                                 type="text"
                                 value={status}

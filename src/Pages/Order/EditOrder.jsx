@@ -38,6 +38,25 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
 
     // Handle Save (Update API)
     const handleSave = () => {
+        // ✅ Validation
+        if (!productName) {
+            toast.error("⚠️ Please select a product name");
+            return;
+        }
+        if (!quantity || quantity <= 0) {
+            toast.error("⚠️ Quantity must be greater than 0");
+            return;
+        }
+        if (!price || price <= 0) {
+            toast.error("⚠️ Price must be greater than 0");
+            return;
+        }
+        if (!phone || phone.length !== 10) {
+            toast.error("⚠️ Phone number must be 10 digits");
+            return;
+        }
+
+        // ✅ If all validations pass
         const updatedData = {
             productName,
             quantity,
@@ -54,14 +73,15 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
         dispatch(updateOrder({ id: selectedOrder._id, orderData: updatedData }))
             .unwrap()
             .then(() => {
-                toast.success("Quote updated successfully!");
+                toast.success(" Quote updated successfully!");
                 setShowOrder("Table");
             })
             .catch((err) => {
-                console.error("Update failed:", err);
-                alert("Failed to update order!");
+                console.error("❌ Update failed:", err);
+                toast.error("Failed to update order. Please try again.");
             });
     };
+
 
     return (
         <div
@@ -173,9 +193,11 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                     <div>
                         <label className="text-sm font-medium">Phone</label>
                         <input
-                            type="number"
+                            type="tel"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
+                            maxLength={10}
+                            pattern="[0-9]{10}"
                             placeholder="Enter Phone"
                             className="w-full border rounded px-3 py-2 mt-1"
                         />

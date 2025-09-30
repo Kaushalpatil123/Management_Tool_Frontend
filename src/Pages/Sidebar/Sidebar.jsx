@@ -25,8 +25,8 @@ const Sidebar = () => {
       <div className=" overflow-y-auto w-64 ">
         {/* Logo */}
         <div className="flex items-center space-x-2 px-6 py-4">
-          <div className="w-8 h-8 bg-blue-600 rounded">
-            {/* placeholder for logo */}
+          <div className="w-8 h-8 bg-blue-600 rounded flex justify-center align-middle items-center text-white font-medium">
+            MT
           </div>
           <h1 className="text-lg font-bold text-gray-800">Managemnt Tool</h1>
         </div>
