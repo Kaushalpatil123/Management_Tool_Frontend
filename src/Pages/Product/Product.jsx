@@ -5,6 +5,7 @@ import Header from "../../Components/Header/Header";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import { fetchProducts } from "../../Store/slices/productSlice";
+import config from "../../config/api";
 
 const Product = () => {
   const [ShowProduct, setShowProduct] = useState("Table");
@@ -17,6 +18,7 @@ const Product = () => {
   const { items: products, loading, error } = useSelector(
     (state) => state.products
   );
+const API_URL = config.backendUrl;
 
   // Refresh handler
   const Refresh = React.useCallback(() => {
@@ -120,7 +122,7 @@ const Product = () => {
                     <div className="py-3 px-4 w-[22.9%] flex justify-center">
                       {product.imageUrl ? (
                         <img
-                          src={`http://localhost:5000${product.imageUrl}`}
+                          src={`${API_URL}${product.imageUrl}`}
                           alt="Product"
                           className="h-8"
                         />
