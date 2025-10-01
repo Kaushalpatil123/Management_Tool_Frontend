@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = () => {
     return (
-        <div className=' h-full  pl-20 pr-10 flex justify-end align-middle items-center'>
+        <div className=' h-full pl-20 pr-10 flex justify-end align-middle items-center'>
 
             <div>
                 <div className='bg-[#fde3cf] py-2.5 px-4 rounded-full shadow-neutral-600 cursor-pointer'

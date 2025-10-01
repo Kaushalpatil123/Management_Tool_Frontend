@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft,Plus,OctagonX, } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../Store/slices/orderSlice";
 import { toast } from "react-toastify"; // optional if you're using toast
@@ -101,18 +101,18 @@ const AddOrder = ({ setShowOrder }) => {
             <span className="px-2 py-1 text-sm bg-gray-200 rounded">{status}</span>
           </div>
 
-          <div className="flex gap-3">
+          <div className="space-x-2 flex">
             <button
               onClick={() => setShowOrder("Table")}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+              className="py-2 px-4 border cursor-pointer border-gray-300 rounded-xl text-sm font-semibold flex gap-2 items-center"
             >
-              Cancel
+              <OctagonX size={18} /> Cancel
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="py-2 px-4 cursor-pointer text-sm bg-[#1447e6] text-white font-semibold flex gap-2 rounded-xl items-center"
             >
-              Save
+              <Plus size={18} /> Save
             </button>
           </div>
         </div>

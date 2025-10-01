@@ -22,7 +22,7 @@ const Order = () => {
     useEffect(() => {
         dispatch(fetchOrders());
     }, [dispatch]);
-    
+
     const filteredOrders = orders.filter((order) =>
         order.productName.toLowerCase().includes(search.toLowerCase())
     );
@@ -69,7 +69,7 @@ const Order = () => {
             <div className="h-full w-full">
                 {/* Page Header */}
                 <div className="h-[15%] w-full ">
-                    <Header/>
+                    <Header />
                 </div>
                 {ShowOrder === "Table" && (
                     <div className="w-full h-full flex justify-center">
@@ -80,11 +80,14 @@ const Order = () => {
                                     "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
                             }}
                         >
+                            <div className="flex items-center gap-2">
+                                <a href="/" className="p-2 cursor-pointer hover:bg-gray-100 rounded-full"> <ArrowLeft /></a>
+
+                                <h2 className="text-xl font-semibold">Order List</h2>
+                            </div>
                             {/* Header */}
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <h2 className="text-xl font-semibold">Order List</h2>
-                                </div>
+                            <div className="flex items-center justify-end">
+
 
                                 <div className="flex items-center gap-3">
                                     <input
@@ -94,12 +97,12 @@ const Order = () => {
                                         onChange={(e) => setSearch(e.target.value)}
                                         className="border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    
+
                                     <button
                                         onClick={() => {
                                             setShowOrder("AddForm")
                                         }}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1">
+                                        className="bg-[#1447e6] cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1 font-semibold">
                                         <Plus className="w-4 h-4" />
                                         Add New Order
                                     </button>
@@ -129,7 +132,7 @@ const Order = () => {
                                             key={order.id}
                                             className="flex hover:bg-gray-50 text-sm"
                                         >
-                                            <div className="w-[6%] text-center px-4 py-3">{index + 1+indexOfFirstOrder}</div>
+                                            <div className="w-[6%] text-center px-4 py-3">{index + 1 + indexOfFirstOrder}</div>
                                             <div className="w-[10%] text-center px-4 py-3">{order.productName}</div>
                                             <div className="w-[8%] text-center px-4 py-3">{order.quantity}</div>
                                             <div className="w-[8%] text-center px-4 py-3">₹{order.price}</div>

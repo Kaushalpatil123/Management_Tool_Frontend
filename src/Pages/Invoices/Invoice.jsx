@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, RefreshCcw, MoreHorizontal } from "lucide-react";
+import {ArrowLeft, Plus, RefreshCcw, MoreHorizontal } from "lucide-react";
 import {
   Search,
   RefreshCw,
@@ -94,6 +94,7 @@ const Invoice = () => {
             >
 
               <div className="flex items-center gap-2 mb-4">
+                <a href="/" className="p-2 cursor-pointer hover:bg-gray-100 rounded-full"> <ArrowLeft /></a>
                 <h2 className="text-lg font-semibold">Invoice List</h2>
               </div>
 
@@ -115,7 +116,7 @@ const Invoice = () => {
 
                 <button
                   onClick={() => setShowInvoice("Addform")}
-                  className="bg-[#0050c8] hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow">
+                  className="bg-[#0050c8] cursor-pointer  hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow">
                   Add New Invoice (for Customers)
                 </button>
               </div>

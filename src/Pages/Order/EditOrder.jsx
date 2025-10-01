@@ -110,13 +110,13 @@ const EditOrder = ({ setShowOrder, selectedOrder }) => {
                     <div className="flex gap-3">
                         <button
                             onClick={() => setShowOrder("Table")}
-                            className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+                            className="px-4 cursor-pointer py-2 border rounded-lg hover:bg-gray-100"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            className="px-4 cursor-pointer py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
                             Save
                         </button>

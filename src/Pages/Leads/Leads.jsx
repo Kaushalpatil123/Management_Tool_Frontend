@@ -7,6 +7,7 @@ import {
   Trash,
   ChevronLeft,
   Pencil,
+  ArrowLeft
 } from "lucide-react";
 import AddLead from "./AddLead";
 import Header from "../../Components/Header/Header";
@@ -93,7 +94,7 @@ const Leads = () => {
       <div className="h-full w-full">
         {/* Page Header */}
         <div className="h-[15%] w-full ">
-          <Header/>
+          <Header />
         </div>
 
         <div className="w-full h-full flex justify-center">
@@ -106,6 +107,8 @@ const Leads = () => {
           >
             {/* Header */}
             <div className="flex items-center gap-2 mb-4">
+              <a href="/" className="p-2 cursor-pointer hover:bg-gray-100 rounded-full"> <ArrowLeft /></a>
+
               <h2 className="text-lg font-semibold">Lead List</h2>
             </div>
 
@@ -168,8 +171,8 @@ const Leads = () => {
                   ) : (
                     currentLeads.map((lead, index) => (
                       <div key={index} className="flex w-full">
-                         <div className="p-2 w-[5%] text-center">
-                          {index+1+indexOfFirstLead}
+                        <div className="p-2 w-[5%] text-center">
+                          {index + 1 + indexOfFirstLead}
                         </div>
                         <div className="p-2 w-[12.5%] text-center break-all text-wrap">
                           {lead.branch}
@@ -267,7 +270,7 @@ const Leads = () => {
                 />
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>

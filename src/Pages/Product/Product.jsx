@@ -81,7 +81,7 @@ const Product = () => {
 
               <button
                 onClick={() => setShowProduct("Addform")}
-                className="px-4 py-2 bg-[#1447e6] text-white rounded-md text-sm hover:bg-blue-700"
+                className="px-4 py-2 bg-[#1447e6] cursor-pointer text-white rounded-md text-sm hover:bg-blue-700"
               >
                 Add New Product
               </button>

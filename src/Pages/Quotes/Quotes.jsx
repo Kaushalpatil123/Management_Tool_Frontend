@@ -88,6 +88,7 @@ const Quotes = () => {
             >
               {/* Header */}
               <div className="flex items-center gap-2 mb-4">
+                <a href="/" className="p-2 cursor-pointer hover:bg-gray-100 rounded-full"> <ArrowLeft /></a>
                 <h2 className="text-lg font-semibold">Quotes For Customers</h2>
               </div>
 
@@ -110,7 +111,7 @@ const Quotes = () => {
 
                 <button
                   onClick={() => setShowQuote("Addform")}
-                  className="bg-[#0050c8] hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow">
+                  className="bg-[#0050c8] cursor-pointer hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow">
                   Add New Quotes (for Customers)
                 </button>
               </div>
@@ -143,7 +144,7 @@ const Quotes = () => {
                     ) : (
                       currentQuote.map((lead, index) => (
                         <div key={index} className=" flex w-full">
-                          <div className="px-4 py-3 w-[12.5%] text-center">{index+1+indexOfFirstQuote}</div>
+                          <div className="px-4 py-3 w-[12.5%] text-center">{index + 1 + indexOfFirstQuote}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{lead.client}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.date)}</div>
                           <div className="px-4 py-3 w-[12.5%] text-center">{formatDate(lead.expireDate)}</div>
