@@ -36,7 +36,7 @@ const Cards = () => {
     }, [orders, leads, invoices, quotes]);
 
     return (
-        <div className='w-full px-10'>
+        <div className='w-full px-7'>
 
             <div className="flex justify-between align-middle items-center gap-4 py-6 w-full">
                 <a href="/orders" class="block max-w-sm w-[25%] p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">

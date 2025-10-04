@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../Components/Header/Header";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
-import { fetchProducts } from "../../Store/slices/productSlice";
+import { deleteProduct, fetchProducts } from "../../Store/slices/productSlice";
 import config from "../../config/api";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const [ShowProduct, setShowProduct] = useState("Table");
@@ -18,7 +19,9 @@ const Product = () => {
   const { items: products, loading, error } = useSelector(
     (state) => state.products
   );
-const API_URL = config.backendUrl;
+  const API_URL = config.backendUrl;
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedProductId, setselectedProductId] = useState(null);
 
   // Refresh handler
   const Refresh = React.useCallback(() => {
@@ -50,10 +53,25 @@ const API_URL = config.backendUrl;
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
+
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteProduct(selectedProductId)).unwrap();
+      toast.success("Product deleted successfully!");
+    } catch (error) {
+      toast.error(error || "Error deleting product");
+      console.error("Delete error:", error);
+    } finally {
+      setIsDeleteOpen(false);
+      setselectedProductId(null);
+      dispatch(fetchProducts());
+
+    }
+  };
   return (
     <div className="h-full w-full">
       <div className="h-[15%] w-full ">
-        <Header/>
+        <Header />
       </div>
       <div className="w-full h-full flex justify-center">
         {ShowProduct === "Table" && (
@@ -68,7 +86,7 @@ const API_URL = config.backendUrl;
             {/* Header */}
             <div className="flex items-center gap-2 mb-6">
               <h2 className="text-lg font-semibold">Product List</h2>
-              
+
             </div>
 
             {/* Top Bar */}
@@ -90,13 +108,13 @@ const API_URL = config.backendUrl;
             </div>
             {/* Table */}
             <div className="overflow-auto w-full text-sm " >
-                <div className="bg-gray-50 flex text-left text-gray-600 font-semibold sticky top-0">
-                  <div className="py-3 px-4 w-[8%] flex justify-center">Sr.No</div>
-                  <div className="py-3 px-4 w-[22.9%] flex justify-center">Product Name</div>
-                  <div className="py-3 px-4 w-[22.9%] flex justify-center">Product No.</div>
-                  <div className="py-3 px-4 w-[22.9%] flex justify-center">Image</div>
-                  <div className="py-3 px-4 w-[22.9%] flex justify-center">Actions</div>
-                </div>
+              <div className="bg-gray-50 flex text-left text-gray-600 font-semibold sticky top-0">
+                <div className="py-3 px-4 w-[8%] flex justify-center">Sr.No</div>
+                <div className="py-3 px-4 w-[22.9%] flex justify-center">Product Name</div>
+                <div className="py-3 px-4 w-[22.9%] flex justify-center">Product No.</div>
+                <div className="py-3 px-4 w-[22.9%] flex justify-center">Image</div>
+                <div className="py-3 px-4 w-[22.9%] flex justify-center">Actions</div>
+              </div>
 
               {loading ? (
                 <p className="p-4 text-center">Loading...</p>
@@ -141,7 +159,10 @@ const API_URL = config.backendUrl;
                         <Pencil />
                       </div>
                       <div
-                        // onClick={() => dispatch(deleteProduct(product._id))}
+                        onClick={() => {
+                          setselectedProductId(product._id);
+                          setIsDeleteOpen(true);
+                        }}
                         className="cursor-pointer hover:bg-gray-300 p-1 rounded-md text-red-600"
                       >
                         <Trash />
@@ -205,6 +226,37 @@ const API_URL = config.backendUrl;
             Refresh={Refresh}
             product={selectedProduct}
           />
+        )}
+
+        {isDeleteOpen && (
+          <>
+            {/* Overlay */}
+            <div className="fixed inset-0 bg-black opacity-40 backdrop-blur-sm z-40" />
+
+            {/* Centered Modal */}
+            <div className="fixed inset-0 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-xl shadow-lg w-[350px]">
+                <h2 className="text-lg font-semibold mb-4">Delete Lead</h2>
+                <p className="text-gray-600 mb-6">
+                  Are you sure you want to delete this Order?
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => setIsDeleteOpen(false)}
+                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
